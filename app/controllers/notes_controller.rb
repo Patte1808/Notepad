@@ -1,6 +1,7 @@
 class NotesController < ApplicationController
   def index
     @notes = Note.all
+    @auth_token_form = form_authenticity_token
   end
 
   def new
