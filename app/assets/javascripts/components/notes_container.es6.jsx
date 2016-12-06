@@ -6,13 +6,13 @@ class NotesContainer extends React.Component {
         this.handleNoteSubmit = this.handleNoteSubmit.bind(this);
         this.handleNoteUpdate = this.handleNoteUpdate.bind(this);
         this.handleNewNote = this.handleNewNote.bind(this);
+        this.handleNoteRemove = this.handleNoteRemove.bind(this);
 
         this.state = {selectedNote: null, isEditMode: false, notes: this.props.notes};
     }
 
     handleSelectedNoteChange(note) {
         this.setState({selectedNote: note});
-        console.log('Settings state, new selected note is: ' + this.state.selectedNote.title);
     }
 
     handleToggleViewMode() {
@@ -36,6 +36,37 @@ class NotesContainer extends React.Component {
                 this.setState({notes: notes, selectedNote: note});
             }
         }
+    }
+
+    handleNoteRemove(note) {
+        fetch('http://localhost:3000/notes/' + note.id, {
+            method: 'DELETE',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept' : 'application/json',
+                'Content-Type' : 'application/json',
+                'X-CSRF-Token' : this.props.csrf
+            },
+            body:
+                JSON.stringify({
+                    note: note
+                }),
+            credentials: 'same-origin'
+        }).then((response) => {
+            if(response.ok) {
+                response.json().then((data) => {
+                    this.setState({
+                        notes: data
+                    });
+
+                    if(this.state.selectedNote.id === note.id) {
+                        this.setState({
+                            selectedNote: (this.state.notes.length > 0) ? this.state.notes[0] : null
+                        });
+                    }
+                });
+            }
+        });
     }
 
     handleNewNote(e) {
@@ -77,7 +108,10 @@ class NotesContainer extends React.Component {
             </div>
           <div className="row">
               <div className="col-md-4">
-                <NotesList notes={this.state.notes} selectedNote={this.state.selectedNote} onChange={this.handleSelectedNoteChange} />
+                <NotesList notes={this.state.notes}
+                           selectedNote={this.state.selectedNote}
+                           onChange={this.handleSelectedNoteChange}
+                           onRemoveNote={this.handleNoteRemove} />
               </div>
               <div className="col-md-8">
                   {this.state.selectedNote !== null &&
