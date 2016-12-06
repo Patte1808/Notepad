@@ -11,6 +11,7 @@ class NotesContainer extends React.Component {
 
     handleSelectedNoteChange(note) {
         this.setState({selectedNote: note});
+        console.log('Settings state, new selected note is: ' + this.state.selectedNote.title);
     }
 
     handleToggleViewMode() {

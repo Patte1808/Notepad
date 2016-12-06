@@ -2,6 +2,7 @@ class NotesList extends React.Component {
 
     handleChange(note) {
         this.props.onChange(note);
+        console.log('handleChange');
     }
 
   render () {

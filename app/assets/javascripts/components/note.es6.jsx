@@ -11,6 +11,13 @@ class Note extends React.Component {
         this.handleNoteUpdate = this.handleNoteUpdate.bind(this);
     }
 
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            title: newProps.note.title,
+            body: newProps.note.body
+        });
+    }
+
     handleViewModeChange(e) {
         e.preventDefault();
         this.props.onToggleViewMode();
