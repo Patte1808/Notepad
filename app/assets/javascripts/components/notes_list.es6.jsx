@@ -1,6 +1,7 @@
 class NotesList extends React.Component {
 
-    handleChange(note) {
+    handleChange(e, note) {
+        e.preventDefault();
         this.props.onChange(note);
         console.log('handleChange');
     }
@@ -8,13 +9,11 @@ class NotesList extends React.Component {
   render () {
       var notes = this.props.notes;
       var listItems = notes.map((note) =>
-          <li key={note.id} onClick={() => this.handleChange(note)} className={this.props.selectedNote === note ? 'selected' : ''}>{note.title}</li>
+          <a href="#" key={note.id} onClick={(e) => this.handleChange(e, note)} className={"list-group-item " + (this.props.selectedNote === note ? 'active' : '')}>{note.title}</a>
       );
     return (
-      <div>
-          <ul>
-              {listItems}
-          </ul>
+      <div className="list-group">
+          {listItems}
       </div>
     );
   }

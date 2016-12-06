@@ -71,9 +71,15 @@ class Note extends React.Component {
                 <div>
                     <form onSubmit={this.handleFormSubmit}>
                         <input type="hidden" name="authenticity_token" value={this.props.csrf} />
-                        <input type="text" value={this.state.title} placeholder="Title" onChange={this.handleTitleChange} />
-                        <input type="text" value={this.state.body} placeholder="Body" onChange={this.handleBodyChange} />
-                        <input type="submit" value="Save Note" />
+                        <div className="form-group">
+                            <label htmlFor="title">Title</label>
+                            <input type="text" id="title" className="form-control" value={this.state.title} placeholder="Title" onChange={this.handleTitleChange} />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="body">Body</label>
+                            <textarea className="form-control" rows="3" id="body" value={this.state.body} placeholder="Body" onChange={this.handleBodyChange}></textarea>
+                        </div>
+                        <button type="submit" className="btn btn-default">Save Note</button>
                     </form>
                 </div>
             );
@@ -88,9 +94,13 @@ class Note extends React.Component {
             );
         }
     return (
-      <div>
-          <a href="#" onClick={(e) => this.handleViewModeChange(e)}>{this.props.isEditMode ? 'Read' : 'Edit'}</a>
-          {view}
+      <div className="panel panel-default">
+          <div className="panel-heading">
+              <a href="#" onClick={(e) => this.handleViewModeChange(e)}>{this.props.isEditMode ? 'Read' : 'Edit'}</a>
+          </div>
+          <div className="panel-body">
+              {view}
+          </div>
       </div>
     );
   }

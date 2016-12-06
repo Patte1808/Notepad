@@ -39,16 +39,20 @@ class NotesContainer extends React.Component {
 
   render () {
     return (
-      <div>
-          <NotesList notes={this.state.notes} selectedNote={this.state.selectedNote} onChange={this.handleSelectedNoteChange} />
-          {this.state.selectedNote !== null &&
-            <Note note={this.state.selectedNote}
-                  isEditMode={this.state.isEditMode}
-                  onToggleViewMode={this.handleToggleViewMode}
-                  csrf={this.props.csrf}
-                  onHandleNoteUpdate={this.handleNoteUpdate}
-            />
-          }
+      <div className="row">
+          <div className="col-md-4">
+            <NotesList notes={this.state.notes} selectedNote={this.state.selectedNote} onChange={this.handleSelectedNoteChange} />
+          </div>
+          <div className="col-md-8">
+              {this.state.selectedNote !== null &&
+                <Note note={this.state.selectedNote}
+                      isEditMode={this.state.isEditMode}
+                      onToggleViewMode={this.handleToggleViewMode}
+                      csrf={this.props.csrf}
+                      onHandleNoteUpdate={this.handleNoteUpdate}
+                />
+              }
+          </div>
       </div>
     );
   }
