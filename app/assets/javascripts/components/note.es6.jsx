@@ -8,6 +8,7 @@ class Note extends React.Component {
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleBodyChange = this.handleBodyChange.bind(this);
+        this.handleNoteUpdate = this.handleNoteUpdate.bind(this);
     }
 
     handleViewModeChange(e) {
@@ -15,14 +16,40 @@ class Note extends React.Component {
         this.props.onToggleViewMode();
     }
 
+    handleNoteUpdate(note) {
+        this.props.onHandleNoteUpdate(note);
+    }
+
     handleFormSubmit(e) {
-        console.log('Submitted');
-        this.handleViewModeChange();
-        return false;
+        e.preventDefault();
+        console.log(fetch);
+        var that = this;
+
+        fetch('http://localhost:3000/notes/' + that.props.note.id, {
+            method: 'PUT',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept' : 'application/json',
+                'Content-Type' : 'application/json',
+                'X-CSRF-Token' : that.props.csrf
+            },
+            body:
+                JSON.stringify({
+                    note: {title: that.state.title, body: that.state.body}
+                }),
+            credentials: 'same-origin'
+        }).then((response) => {
+           if(response.ok) {
+               response.json().then((data) => {
+                  that.handleNoteUpdate(data);
+               });
+           }
+        });
+
+        this.handleViewModeChange(e);
     }
 
     handleTitleChange(e) {
-        console.log('Test');
         this.setState({title: e.target.value});
     }
 
@@ -34,12 +61,14 @@ class Note extends React.Component {
         var view;
         if(this.props.isEditMode) {
             view = (
-                <form role="form" acceptCharset="UTF-8" action="/new" method="post">
-                    <input type="hidden" name="authenticity_token" value={this.props.csrf} />
-                    <input type="text" value={this.state.title} placeholder="Title" onChange={this.handleTitleChange} />
-                    <input type="text" value={this.state.body} placeholder="Body" onChange={this.handleBodyChange} />
-                    <input type="submit" value="Save Note" onClick={this.handleFormSubmit} />
-                </form>
+                <div>
+                    <form onSubmit={this.handleFormSubmit}>
+                        <input type="hidden" name="authenticity_token" value={this.props.csrf} />
+                        <input type="text" value={this.state.title} placeholder="Title" onChange={this.handleTitleChange} />
+                        <input type="text" value={this.state.body} placeholder="Body" onChange={this.handleBodyChange} />
+                        <input type="submit" value="Save Note" />
+                    </form>
+                </div>
             );
         } else {
             view = (
