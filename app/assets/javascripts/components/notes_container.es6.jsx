@@ -5,6 +5,7 @@ class NotesContainer extends React.Component {
         this.handleToggleViewMode = this.handleToggleViewMode.bind(this);
         this.handleNoteSubmit = this.handleNoteSubmit.bind(this);
         this.handleNoteUpdate = this.handleNoteUpdate.bind(this);
+        this.handleNewNote = this.handleNewNote.bind(this);
 
         this.state = {selectedNote: null, isEditMode: false, notes: this.props.notes};
     }
@@ -37,23 +38,59 @@ class NotesContainer extends React.Component {
         }
     }
 
+    handleNewNote(e) {
+        e.preventDefault();
+        fetch('http://localhost:3000/notes/', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept' : 'application/json',
+                'Content-Type' : 'application/json',
+                'X-CSRF-Token' : this.props.csrf
+            },
+            body:
+                JSON.stringify({
+                    note: {title: "New Note", body: ""}
+                }),
+            credentials: 'same-origin'
+        }).then((response) => {
+            if(response.ok) {
+                response.json().then((data) => {
+                    var notes = this.state.notes;
+                    notes.push(data);
+
+                    this.setState({
+                        notes: notes
+                    });
+                });
+            }
+        });
+    }
+
   render () {
     return (
-      <div className="row">
-          <div className="col-md-4">
-            <NotesList notes={this.state.notes} selectedNote={this.state.selectedNote} onChange={this.handleSelectedNoteChange} />
+        <div>
+            <div className="row">
+                <a href="#" onClick={this.handleNewNote}>
+                    <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span> New Note
+                </a>
+            </div>
+          <div className="row">
+              <div className="col-md-4">
+                <NotesList notes={this.state.notes} selectedNote={this.state.selectedNote} onChange={this.handleSelectedNoteChange} />
+              </div>
+              <div className="col-md-8">
+                  {this.state.selectedNote !== null &&
+                    <Note note={this.state.selectedNote}
+                          isEditMode={this.state.isEditMode}
+                          onToggleViewMode={this.handleToggleViewMode}
+                          csrf={this.props.csrf}
+                          onHandleNoteUpdate={this.handleNoteUpdate}
+                    />
+                  }
+              </div>
           </div>
-          <div className="col-md-8">
-              {this.state.selectedNote !== null &&
-                <Note note={this.state.selectedNote}
-                      isEditMode={this.state.isEditMode}
-                      onToggleViewMode={this.handleToggleViewMode}
-                      csrf={this.props.csrf}
-                      onHandleNoteUpdate={this.handleNoteUpdate}
-                />
-              }
-          </div>
-      </div>
+        </div>
     );
   }
 }

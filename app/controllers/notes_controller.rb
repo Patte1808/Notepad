@@ -12,7 +12,7 @@ class NotesController < ApplicationController
     @note = Note.new(note_params)
     @note.save
 
-    redirect_to notes_path
+    render :json => @note
   end
 
   def update
