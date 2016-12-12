@@ -2,6 +2,10 @@ class NotesController < ApplicationController
   def index
     @notes = Note.all
     @auth_token_form = form_authenticity_token
+    respond_to do |format|
+      format.html
+      format.json { render json: @notes }
+    end
   end
 
   def new

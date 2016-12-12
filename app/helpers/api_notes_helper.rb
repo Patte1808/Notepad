@@ -1,0 +1,2 @@
+module ApiNotesHelper
+end
