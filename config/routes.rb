@@ -7,6 +7,9 @@ Rails.application.routes.draw do
       scope 'notes' do
         get '/' => 'api_notes#index'
         post '/' => 'api_notes#create'
+        scope '/:note_id' do
+          put '/' => 'api_notes#update'
+        end
       end
     end
   end

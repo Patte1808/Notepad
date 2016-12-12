@@ -19,4 +19,15 @@ class ApiNotesController < ApplicationController
 
     render json: @notes
   end
+
+  def update
+    @note = Note.find(params[:id])
+
+    @note.assign_attributes(@json['note'])
+    if @note.save
+      render json: @note
+    else
+      render nothing: true, status: :bad_request
+    end
+  end
 end
