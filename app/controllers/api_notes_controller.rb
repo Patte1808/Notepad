@@ -21,6 +21,7 @@ class ApiNotesController < ApplicationController
   end
 
   def update
+    @json = JSON.parse(request.body.read)
     @note = Note.find(params[:id])
 
     @note.assign_attributes(@json['note'])
@@ -29,5 +30,13 @@ class ApiNotesController < ApplicationController
     else
       render nothing: true, status: :bad_request
     end
+  end
+
+  def destroy
+    @note = Note.find(params[:id])
+
+    @note.destroy
+
+    render json: {}, :status => 200
   end
 end
